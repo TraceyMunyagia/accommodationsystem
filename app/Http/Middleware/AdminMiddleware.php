@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 
-class UserMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth::check() && !auth::user()->is_admin) {
+        if(auth::check() && auth::user()->is_admin) {
         return $next($request);
         }
         abort(403,'You do not have permission to access this page');

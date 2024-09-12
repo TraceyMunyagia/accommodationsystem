@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
 
-class UserMiddleware
+class GuestAdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,9 +17,12 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth::check() && !auth::user()->is_admin) {
-        return $next($request);
+        if(auth::check() && auth::user()->is_admin){
+            return redirect()->route('admin.home');
         }
-        abort(403,'You do not have permission to access this page');
-}
+        if(auth::check() && !auth::user()->is_admin){
+            return redirect()->route('user.home');
+        }
+        return $next($request);
+    }
 }
